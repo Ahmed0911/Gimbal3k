@@ -31,6 +31,7 @@
 #include "Drivers/HopeRF.h"
 #include "Drivers/IMU.h"
 #include "Drivers/CANDrv.h"
+#include "Drivers/AS5147UEncoder.h"
 
 #include "CommData.h"
 #include "LLConverter.h"
@@ -55,6 +56,7 @@ UBloxGPS gps;
 EtherDriver etherDrv;
 IMU imu;
 CANDrv canDrv;
+AS5147EncoDrv as5147Drv;
 
 // System Objects
 LLConverter llConv;
@@ -115,6 +117,9 @@ bool WheelsEnabled = false;
 int Wheel1Velocity = 0;
 int Wheel2Velocity = 0;
 
+int OldPosition = 0;
+int PositionCNT = 0;
+
 void main(void)
 {
 	// Enable lazy stacking for interrupt handlers.  This allows floating-point
@@ -143,6 +148,7 @@ void main(void)
 	etherDrv.Init();
 	imu.Init();
     canDrv.Init();
+    as5147Drv.Init();
 
 	// Systick
 	SysTickPeriodSet(g_ui32SysClock/SysTickFrequency);
@@ -169,6 +175,13 @@ void main(void)
 
 		// Baro
 		if( (MainLoopCounter % 1) == 0 ) baroDrv.Update(); // [17 us] -> 10ms!!!
+
+		// Encoders
+		as5147Drv.Update();
+		int cntEnco = as5147Drv.GetCounter1();
+		int deltaPos = cntEnco - OldPosition;
+		OldPosition = cntEnco;
+		PositionCNT += deltaPos;
 
 		// IMU1
 		mpu9250Drv.Update();
