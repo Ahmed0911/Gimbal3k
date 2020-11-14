@@ -55,7 +55,7 @@ void EtherDriver::Init()
 
 
 	// lwIP Ethernet
-	lwIPInit(g_ui32SysClock, pucMACAddress, inet_addr("101.1.0.10"), inet_addr("0.255.255.255"), inet_addr("1.1.0.10"), IPADDR_USE_STATIC); 	// Set IP
+	lwIPInit(g_ui32SysClock, pucMACAddress, inet_addr("101.0.168.192"), inet_addr("0.255.255.255"), inet_addr("1.0.168.192"), IPADDR_USE_STATIC); 	// Set IP
 	//lwIPInit(g_ui32SysClock, pucMACAddress, 0, 0, 0, IPADDR_USE_DHCP); 	// Set IP
 
 	// Fix LEDs
@@ -66,7 +66,7 @@ void EtherDriver::Init()
 	// Setup the device locator service. (can be found by "finder.exe")
 	LocatorInit();
 	LocatorMACAddrSet(pucMACAddress);
-	LocatorAppTitleSet("EthBridge Board");
+	LocatorAppTitleSet("Gimbal3k Board");
 
 	// init lwIP
 	m_udpPcb =  udp_new();
@@ -104,7 +104,7 @@ void EtherDriver::DataReceived(pbuf *p, ip_addr *addr, u16_t port)
 			}
 
 			default:
-				//ProcessCommand(data[2], &data[3], dataSize);
+				ProcessCommand(data[2], &data[3], dataSize);
 				break;
 			}
 	}
