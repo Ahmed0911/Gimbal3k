@@ -40,6 +40,10 @@ namespace Gimbal3kWInClient
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxPositionPan = new System.Windows.Forms.TextBox();
             this.textBoxPositionTilt = new System.Windows.Forms.TextBox();
+            this.buttonRight = new System.Windows.Forms.Button();
+            this.buttonLeft = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
+            this.buttonDown = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxIPAddress
@@ -102,7 +106,7 @@ namespace Gimbal3kWInClient
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 162);
+            this.label4.Location = new System.Drawing.Point(12, 170);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 20);
             this.label4.TabIndex = 6;
@@ -118,17 +122,65 @@ namespace Gimbal3kWInClient
             // 
             // textBoxPositionTilt
             // 
-            this.textBoxPositionTilt.Location = new System.Drawing.Point(120, 159);
+            this.textBoxPositionTilt.Location = new System.Drawing.Point(120, 167);
             this.textBoxPositionTilt.Name = "textBoxPositionTilt";
             this.textBoxPositionTilt.ReadOnly = true;
             this.textBoxPositionTilt.Size = new System.Drawing.Size(125, 26);
             this.textBoxPositionTilt.TabIndex = 8;
             // 
+            // buttonRight
+            // 
+            this.buttonRight.Location = new System.Drawing.Point(170, 250);
+            this.buttonRight.Name = "buttonRight";
+            this.buttonRight.Size = new System.Drawing.Size(75, 36);
+            this.buttonRight.TabIndex = 9;
+            this.buttonRight.Text = "Right";
+            this.buttonRight.UseVisualStyleBackColor = true;
+            this.buttonRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonRight_MouseDown);
+            this.buttonRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonRight_MouseUp);
+            // 
+            // buttonLeft
+            // 
+            this.buttonLeft.Location = new System.Drawing.Point(78, 250);
+            this.buttonLeft.Name = "buttonLeft";
+            this.buttonLeft.Size = new System.Drawing.Size(75, 36);
+            this.buttonLeft.TabIndex = 10;
+            this.buttonLeft.Text = "Left";
+            this.buttonLeft.UseVisualStyleBackColor = true;
+            this.buttonLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonLeft_MouseDown);
+            this.buttonLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonLeft_MouseUp);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Location = new System.Drawing.Point(130, 208);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(75, 36);
+            this.buttonUp.TabIndex = 12;
+            this.buttonUp.Text = "Up";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonUp_MouseDown);
+            this.buttonUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonUp_MouseUp);
+            // 
+            // buttonDown
+            // 
+            this.buttonDown.Location = new System.Drawing.Point(130, 292);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(75, 36);
+            this.buttonDown.TabIndex = 11;
+            this.buttonDown.Text = "Down";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonDown_MouseDown);
+            this.buttonDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonDown_MouseUp);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(439, 261);
+            this.ClientSize = new System.Drawing.Size(352, 371);
+            this.Controls.Add(this.buttonUp);
+            this.Controls.Add(this.buttonDown);
+            this.Controls.Add(this.buttonLeft);
+            this.Controls.Add(this.buttonRight);
             this.Controls.Add(this.textBoxPositionTilt);
             this.Controls.Add(this.textBoxPositionPan);
             this.Controls.Add(this.label4);
@@ -157,6 +209,10 @@ namespace Gimbal3kWInClient
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxPositionPan;
         private System.Windows.Forms.TextBox textBoxPositionTilt;
+        private System.Windows.Forms.Button buttonRight;
+        private System.Windows.Forms.Button buttonLeft;
+        private System.Windows.Forms.Button buttonUp;
+        private System.Windows.Forms.Button buttonDown;
     }
 }
 

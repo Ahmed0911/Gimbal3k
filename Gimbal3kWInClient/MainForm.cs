@@ -19,6 +19,12 @@ namespace Gimbal3kWInClient
         private string TargetAdress = ""; // filled in dialog
         private int LocalPort = 0; // autoselect port (will be sent in ping command)        
 
+        // Buttons
+        private bool ButtonLeft = false;
+        private bool ButtonRight = false;
+        private bool ButtonUp = false;
+        private bool ButtonDown = false;
+
         private SGimbal3kData localGimbalDataCopy;
 
         public MainForm()
@@ -72,6 +78,14 @@ namespace Gimbal3kWInClient
             textBoxMainLoopCounter.Text = localGimbalDataCopy.LoopCounter.ToString();
             textBoxPositionPan.Text = localGimbalDataCopy.Position1.ToString();
             textBoxPositionTilt.Text = localGimbalDataCopy.Position2.ToString();
+
+            // Debug Buttons
+            Text = ButtonLeft.ToString() + ",";
+            Text += ButtonRight.ToString() + ",";
+            Text += ButtonUp.ToString() + ",";
+            Text += ButtonDown.ToString();
+
+            // Send Button Commands
         }
 
         ///////////////////////////////
@@ -96,6 +110,46 @@ namespace Gimbal3kWInClient
             data[2] = type; // Type
             Array.Copy(buffer, 0, data, 3, buffer.Length);
             udpClient.Send(data, data.Length, TargetAdress, TargetPort); // target port is ignored (use 10000)
+        }
+
+        private void buttonLeft_MouseDown(object sender, MouseEventArgs e)
+        {
+            ButtonLeft = true;
+        }
+
+        private void buttonLeft_MouseUp(object sender, MouseEventArgs e)
+        {
+            ButtonLeft = false;
+        }
+
+        private void buttonRight_MouseDown(object sender, MouseEventArgs e)
+        {
+            ButtonRight = true;
+        }
+
+        private void buttonRight_MouseUp(object sender, MouseEventArgs e)
+        {
+            ButtonRight = false;
+        }
+
+        private void buttonUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            ButtonUp = true;
+        }
+
+        private void buttonUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            ButtonUp = false;
+        }
+
+        private void buttonDown_MouseDown(object sender, MouseEventArgs e)
+        {
+            ButtonDown = true;
+        }
+
+        private void buttonDown_MouseUp(object sender, MouseEventArgs e)
+        {
+            ButtonDown = false;
         }
     }
 }
