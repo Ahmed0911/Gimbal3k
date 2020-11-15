@@ -76,8 +76,10 @@ namespace Gimbal3kWInClient
 
             // update screen
             textBoxMainLoopCounter.Text = localGimbalDataCopy.LoopCounter.ToString();
-            textBoxPositionPan.Text = localGimbalDataCopy.Position1.ToString();
-            textBoxPositionTilt.Text = localGimbalDataCopy.Position2.ToString();
+            textBoxPositionPanEnco.Text = localGimbalDataCopy.PositionPanEncoCNT.ToString();
+            textBoxPositionTiltEnco.Text = localGimbalDataCopy.PositionTiltEncoCNT.ToString();
+            textBoxPositionPanDeg.Text = localGimbalDataCopy.PositionPanDeg.ToString() + "°";
+            textBoxPositionTiltDeg.Text = localGimbalDataCopy.PositionTiltDeg.ToString() + "°";
 
             // Debug Buttons
             Text = ButtonLeft.ToString() + ",";
@@ -86,6 +88,16 @@ namespace Gimbal3kWInClient
             Text += ButtonDown.ToString();
 
             // Send Button Commands
+            SGimbal3kCommand cmd = new SGimbal3kCommand();
+            cmd.Command = 0x1; // manual cmd
+            float speed = 0.3f;
+            if (ButtonLeft) cmd.RefPan = -speed;
+            if (ButtonRight) cmd.RefPan = speed;
+            if (ButtonUp) cmd.RefTilt = speed;
+            if (ButtonDown) cmd.RefTilt = -speed;
+
+            byte[] cmdArray = Comm.GetBytes(cmd);
+            SendData(0x30, cmdArray);
         }
 
         ///////////////////////////////
@@ -109,7 +121,7 @@ namespace Gimbal3kWInClient
             data[1] = 0x24;
             data[2] = type; // Type
             Array.Copy(buffer, 0, data, 3, buffer.Length);
-            udpClient.Send(data, data.Length, TargetAdress, TargetPort); // target port is ignored (use 10000)
+            udpClient.Send(data, data.Length, TargetAdress, TargetPort); 
         }
 
         private void buttonLeft_MouseDown(object sender, MouseEventArgs e)

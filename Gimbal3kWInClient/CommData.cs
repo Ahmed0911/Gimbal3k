@@ -10,8 +10,11 @@ namespace Gimbal3kWInClient
    public unsafe struct SGimbal3kData
     {
         public UInt32 LoopCounter;
-        public UInt16 Position1;
-        public UInt16 Position2;
+        public UInt16 PositionPanEncoCNT;
+        public UInt16 PositionTiltEncoCNT;
+        
+        public float PositionPanDeg;
+        public float PositionTiltDeg;
 
         public float AccX; // [m/s^2]
         public float AccY; // [m/s^2]
@@ -20,6 +23,13 @@ namespace Gimbal3kWInClient
         // GPS
         public double HomeLongitude; // [deg]
         public double HomeLatitude; // [deg]
+    }
+
+    public unsafe struct SGimbal3kCommand
+    {
+        public UInt32 Command; // 0 - Disabled, 1 - Manual Ctrl
+        public float RefPan; // [-1...+1]
+        public float RefTilt; // [-1...+1]
     }
 
     class Comm

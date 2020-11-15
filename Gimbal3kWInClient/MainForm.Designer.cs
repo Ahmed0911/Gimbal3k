@@ -38,12 +38,14 @@ namespace Gimbal3kWInClient
             this.timerPeriodic = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBoxPositionPan = new System.Windows.Forms.TextBox();
-            this.textBoxPositionTilt = new System.Windows.Forms.TextBox();
+            this.textBoxPositionPanDeg = new System.Windows.Forms.TextBox();
+            this.textBoxPositionTiltDeg = new System.Windows.Forms.TextBox();
             this.buttonRight = new System.Windows.Forms.Button();
             this.buttonLeft = new System.Windows.Forms.Button();
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonDown = new System.Windows.Forms.Button();
+            this.textBoxPositionPanEnco = new System.Windows.Forms.TextBox();
+            this.textBoxPositionTiltEnco = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBoxIPAddress
@@ -112,21 +114,21 @@ namespace Gimbal3kWInClient
             this.label4.TabIndex = 6;
             this.label4.Text = "Position Tilt:";
             // 
-            // textBoxPositionPan
+            // textBoxPositionPanDeg
             // 
-            this.textBoxPositionPan.Location = new System.Drawing.Point(120, 125);
-            this.textBoxPositionPan.Name = "textBoxPositionPan";
-            this.textBoxPositionPan.ReadOnly = true;
-            this.textBoxPositionPan.Size = new System.Drawing.Size(125, 26);
-            this.textBoxPositionPan.TabIndex = 7;
+            this.textBoxPositionPanDeg.Location = new System.Drawing.Point(120, 125);
+            this.textBoxPositionPanDeg.Name = "textBoxPositionPanDeg";
+            this.textBoxPositionPanDeg.ReadOnly = true;
+            this.textBoxPositionPanDeg.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionPanDeg.TabIndex = 7;
             // 
-            // textBoxPositionTilt
+            // textBoxPositionTiltDeg
             // 
-            this.textBoxPositionTilt.Location = new System.Drawing.Point(120, 167);
-            this.textBoxPositionTilt.Name = "textBoxPositionTilt";
-            this.textBoxPositionTilt.ReadOnly = true;
-            this.textBoxPositionTilt.Size = new System.Drawing.Size(125, 26);
-            this.textBoxPositionTilt.TabIndex = 8;
+            this.textBoxPositionTiltDeg.Location = new System.Drawing.Point(120, 167);
+            this.textBoxPositionTiltDeg.Name = "textBoxPositionTiltDeg";
+            this.textBoxPositionTiltDeg.ReadOnly = true;
+            this.textBoxPositionTiltDeg.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionTiltDeg.TabIndex = 8;
             // 
             // buttonRight
             // 
@@ -172,17 +174,35 @@ namespace Gimbal3kWInClient
             this.buttonDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonDown_MouseDown);
             this.buttonDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.buttonDown_MouseUp);
             // 
+            // textBoxPositionPanEnco
+            // 
+            this.textBoxPositionPanEnco.Location = new System.Drawing.Point(262, 125);
+            this.textBoxPositionPanEnco.Name = "textBoxPositionPanEnco";
+            this.textBoxPositionPanEnco.ReadOnly = true;
+            this.textBoxPositionPanEnco.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionPanEnco.TabIndex = 13;
+            // 
+            // textBoxPositionTiltEnco
+            // 
+            this.textBoxPositionTiltEnco.Location = new System.Drawing.Point(262, 167);
+            this.textBoxPositionTiltEnco.Name = "textBoxPositionTiltEnco";
+            this.textBoxPositionTiltEnco.ReadOnly = true;
+            this.textBoxPositionTiltEnco.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionTiltEnco.TabIndex = 14;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 371);
+            this.ClientSize = new System.Drawing.Size(600, 371);
+            this.Controls.Add(this.textBoxPositionTiltEnco);
+            this.Controls.Add(this.textBoxPositionPanEnco);
             this.Controls.Add(this.buttonUp);
             this.Controls.Add(this.buttonDown);
             this.Controls.Add(this.buttonLeft);
             this.Controls.Add(this.buttonRight);
-            this.Controls.Add(this.textBoxPositionTilt);
-            this.Controls.Add(this.textBoxPositionPan);
+            this.Controls.Add(this.textBoxPositionTiltDeg);
+            this.Controls.Add(this.textBoxPositionPanDeg);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxMainLoopCounter);
@@ -207,12 +227,14 @@ namespace Gimbal3kWInClient
         private System.Windows.Forms.Timer timerPeriodic;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxPositionPan;
-        private System.Windows.Forms.TextBox textBoxPositionTilt;
+        private System.Windows.Forms.TextBox textBoxPositionPanDeg;
+        private System.Windows.Forms.TextBox textBoxPositionTiltDeg;
         private System.Windows.Forms.Button buttonRight;
         private System.Windows.Forms.Button buttonLeft;
         private System.Windows.Forms.Button buttonUp;
         private System.Windows.Forms.Button buttonDown;
+        private System.Windows.Forms.TextBox textBoxPositionPanEnco;
+        private System.Windows.Forms.TextBox textBoxPositionTiltEnco;
     }
 }
 

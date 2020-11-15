@@ -67,8 +67,28 @@ float PerfCpuTimeMS;
 float PerfCpuTimeMSMAX;
 float Acc[3];
 
-uint16_t Position1Enco = 0;
-uint16_t Position2Enco = 0;
+uint16_t PositionPanEnco = 0;
+uint16_t PositionTiltEnco = 0;
+
+float PositionPanDeg = 0;
+float PositionTiltDeg = 0;
+
+// 0 - disabled
+// 1 - manual
+// 2 - ....
+uint32_t CmdMode = 0;
+float RefManualPan = 0; // [-1...1]
+float RefManualTilt = 0; // [-1...1]
+
+// Safety
+int32_t ManualCounter = 0; // shutdown system when reaches zero
+
+// Config
+#define PANPWMCENTER 1510
+#define TILTPWMCENTER 1500
+
+#define PANLEVELDEG 257.4913f
+#define TILTLEVELDEG 34.1915f
 
 void main(void)
 {
@@ -87,8 +107,8 @@ void main(void)
 	pwmDrv.Init();
 
 	// set all PWMs to middle
-	pwmDrv.SetWidthUS(0, 1500 );
-	pwmDrv.SetWidthUS(1, 1500 );
+	pwmDrv.SetWidthUS(0, PANPWMCENTER );
+	pwmDrv.SetWidthUS(1, TILTPWMCENTER );
 	pwmDrv.SetWidthUS(2, 1500 );
 	pwmDrv.SetWidthUS(3, 1500 );
 	pwmDrv.SetWidthUS(4, 1500 );
@@ -118,8 +138,23 @@ void main(void)
 		/////////////////////////////////
 		// Encoders
 		as5147Drv.Update();
-		Position1Enco = as5147Drv.GetCounter1();
-		Position2Enco = as5147Drv.GetCounter2();
+		PositionPanEnco = as5147Drv.GetCounter1();
+		PositionTiltEnco = as5147Drv.GetCounter2();
+		// calculate deg
+		float degPan = PositionPanEnco/16384.0f * 360; // [0...359.987]
+		float degTilt = PositionTiltEnco/16384.0f * 360; // [0...359.987]
+		// center
+		degPan -= PANLEVELDEG;
+		degTilt -= TILTLEVELDEG;
+		// wrap to -180...180
+		if( degPan < -180 ) degPan+=360;
+		if( degPan > 180 ) degPan-=360;
+		if( degTilt < -180 )degTilt+=360;
+		if( degTilt > 180 )degTilt-=360;
+		PositionPanDeg = degPan;
+		PositionTiltDeg = degTilt;
+
+
 
 		// IMU1
 		mpu9250Drv.Update();
@@ -148,13 +183,24 @@ void main(void)
 		/////////////////////////////////
 		// CTRL STEP
 		/////////////////////////////////
-
+		float outputPWMPan = PANPWMCENTER;
+		float outputPWMTilt = TILTPWMCENTER;
+		if( CmdMode == 0x01)
+		{
+		    if( ManualCounter > 0) // safety shutdown for manual control
+		    {
+		        ManualCounter--;
+		        outputPWMPan = PANPWMCENTER + (RefManualPan*150);
+                outputPWMTilt = TILTPWMCENTER + (RefManualTilt*150);
+		    }
+		    else CmdMode = 0x00;
+  		}
 
 		/////////////////////////////////
 		// OUTPUTS
 		/////////////////////////////////
-		//pwmDrv.SetWidthUS(0, 1500 );
-		//pwmDrv.SetWidthUS(1, 1500 );
+		pwmDrv.SetWidthUS(0, outputPWMPan );
+		pwmDrv.SetWidthUS(1, outputPWMTilt );
 
 		// Ethernet
 		SendPeriodicDataEth();
@@ -195,8 +241,11 @@ void SendPeriodicDataEth()
         data.HomeLongitude = lon;
     }
 
-    data.Position1 = Position1Enco;
-    data.Position2 = Position2Enco;
+    data.PositionPanEncoCNT = PositionPanEnco;
+    data.PositionTiltEncoCNT = PositionTiltEnco;
+
+    data.PositionPanDeg = PositionPanDeg;
+    data.PositionTiltDeg = PositionTiltDeg;
 
     etherDrv.SendPacket(0x20, (char*)&data, sizeof(data));
 }
@@ -205,10 +254,22 @@ void ProcessCommand(int cmd, unsigned char* data, int dataSize)
 {
     switch( cmd )
     {
-        case 30: // Set State
+        case 0x30: // Command received
         {
-            //GlobalData.LightActive = data[0];
+            if( dataSize == sizeof(SGimbal3kCommand))
+            {
+                SGimbal3kCommand cmdRef;
+                memcpy(&cmdRef, data, dataSize);
 
+                if( cmdRef.Command == 0x01)
+                {
+                    CmdMode = 0x01;
+                    RefManualPan = cmdRef.RefPan;
+                    RefManualTilt = cmdRef.RefTilt;
+
+                    ManualCounter = 100; // 1 second for shutdown
+                }
+            }
             break;
         }
     }

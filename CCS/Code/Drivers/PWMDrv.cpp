@@ -22,7 +22,9 @@
 
 // 22ms PWM period
 //#define PWMFREQ (1/0.022f) /* 22ms->45Hz */
-#define PWMFREQ (1/0.004f) /* 4ms->250Hz */
+// 11ms PWM period
+#define PWMFREQ (1/0.011f) /* 11ms->90Hz */
+//#define PWMFREQ (1/0.004f) /* 4ms->250Hz */
 extern uint32_t g_ui32SysClock;
 
 void PWMDrv::Init()
