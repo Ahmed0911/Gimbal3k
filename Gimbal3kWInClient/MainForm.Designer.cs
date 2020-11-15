@@ -46,6 +46,14 @@ namespace Gimbal3kWInClient
             this.buttonDown = new System.Windows.Forms.Button();
             this.textBoxPositionPanEnco = new System.Windows.Forms.TextBox();
             this.textBoxPositionTiltEnco = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBoxPanRef = new System.Windows.Forms.TextBox();
+            this.textBoxTiltRef = new System.Windows.Forms.TextBox();
+            this.buttonGO = new System.Windows.Forms.Button();
+            this.radioButtonManualMode = new System.Windows.Forms.RadioButton();
+            this.radioButtonAutoMode = new System.Windows.Forms.RadioButton();
+            this.textBoxActiveMode = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBoxIPAddress
@@ -119,7 +127,7 @@ namespace Gimbal3kWInClient
             this.textBoxPositionPanDeg.Location = new System.Drawing.Point(120, 125);
             this.textBoxPositionPanDeg.Name = "textBoxPositionPanDeg";
             this.textBoxPositionPanDeg.ReadOnly = true;
-            this.textBoxPositionPanDeg.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionPanDeg.Size = new System.Drawing.Size(94, 26);
             this.textBoxPositionPanDeg.TabIndex = 7;
             // 
             // textBoxPositionTiltDeg
@@ -127,7 +135,7 @@ namespace Gimbal3kWInClient
             this.textBoxPositionTiltDeg.Location = new System.Drawing.Point(120, 167);
             this.textBoxPositionTiltDeg.Name = "textBoxPositionTiltDeg";
             this.textBoxPositionTiltDeg.ReadOnly = true;
-            this.textBoxPositionTiltDeg.Size = new System.Drawing.Size(125, 26);
+            this.textBoxPositionTiltDeg.Size = new System.Drawing.Size(94, 26);
             this.textBoxPositionTiltDeg.TabIndex = 8;
             // 
             // buttonRight
@@ -190,11 +198,93 @@ namespace Gimbal3kWInClient
             this.textBoxPositionTiltEnco.Size = new System.Drawing.Size(125, 26);
             this.textBoxPositionTiltEnco.TabIndex = 14;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(282, 236);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 20);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Pan Ref:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(282, 268);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(63, 20);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Tilt Ref:";
+            // 
+            // textBoxPanRef
+            // 
+            this.textBoxPanRef.Location = new System.Drawing.Point(359, 233);
+            this.textBoxPanRef.Name = "textBoxPanRef";
+            this.textBoxPanRef.Size = new System.Drawing.Size(89, 26);
+            this.textBoxPanRef.TabIndex = 17;
+            this.textBoxPanRef.Text = "0";
+            // 
+            // textBoxTiltRef
+            // 
+            this.textBoxTiltRef.Location = new System.Drawing.Point(359, 265);
+            this.textBoxTiltRef.Name = "textBoxTiltRef";
+            this.textBoxTiltRef.Size = new System.Drawing.Size(89, 26);
+            this.textBoxTiltRef.TabIndex = 18;
+            this.textBoxTiltRef.Text = "0";
+            // 
+            // buttonGO
+            // 
+            this.buttonGO.Location = new System.Drawing.Point(358, 307);
+            this.buttonGO.Name = "buttonGO";
+            this.buttonGO.Size = new System.Drawing.Size(90, 37);
+            this.buttonGO.TabIndex = 19;
+            this.buttonGO.Text = "GO";
+            this.buttonGO.UseVisualStyleBackColor = true;
+            this.buttonGO.Click += new System.EventHandler(this.buttonGO_Click);
+            // 
+            // radioButtonManualMode
+            // 
+            this.radioButtonManualMode.AutoSize = true;
+            this.radioButtonManualMode.Checked = true;
+            this.radioButtonManualMode.Location = new System.Drawing.Point(358, 32);
+            this.radioButtonManualMode.Name = "radioButtonManualMode";
+            this.radioButtonManualMode.Size = new System.Drawing.Size(86, 24);
+            this.radioButtonManualMode.TabIndex = 20;
+            this.radioButtonManualMode.TabStop = true;
+            this.radioButtonManualMode.Text = "Manual";
+            this.radioButtonManualMode.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAutoMode
+            // 
+            this.radioButtonAutoMode.AutoSize = true;
+            this.radioButtonAutoMode.Location = new System.Drawing.Point(358, 62);
+            this.radioButtonAutoMode.Name = "radioButtonAutoMode";
+            this.radioButtonAutoMode.Size = new System.Drawing.Size(68, 24);
+            this.radioButtonAutoMode.TabIndex = 21;
+            this.radioButtonAutoMode.Text = "Auto";
+            this.radioButtonAutoMode.UseVisualStyleBackColor = true;
+            // 
+            // textBoxActiveMode
+            // 
+            this.textBoxActiveMode.Location = new System.Drawing.Point(357, 92);
+            this.textBoxActiveMode.Name = "textBoxActiveMode";
+            this.textBoxActiveMode.ReadOnly = true;
+            this.textBoxActiveMode.Size = new System.Drawing.Size(91, 26);
+            this.textBoxActiveMode.TabIndex = 22;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 371);
+            this.ClientSize = new System.Drawing.Size(483, 367);
+            this.Controls.Add(this.textBoxActiveMode);
+            this.Controls.Add(this.radioButtonAutoMode);
+            this.Controls.Add(this.radioButtonManualMode);
+            this.Controls.Add(this.buttonGO);
+            this.Controls.Add(this.textBoxTiltRef);
+            this.Controls.Add(this.textBoxPanRef);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.textBoxPositionTiltEnco);
             this.Controls.Add(this.textBoxPositionPanEnco);
             this.Controls.Add(this.buttonUp);
@@ -235,6 +325,14 @@ namespace Gimbal3kWInClient
         private System.Windows.Forms.Button buttonDown;
         private System.Windows.Forms.TextBox textBoxPositionPanEnco;
         private System.Windows.Forms.TextBox textBoxPositionTiltEnco;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBoxPanRef;
+        private System.Windows.Forms.TextBox textBoxTiltRef;
+        private System.Windows.Forms.Button buttonGO;
+        private System.Windows.Forms.RadioButton radioButtonManualMode;
+        private System.Windows.Forms.RadioButton radioButtonAutoMode;
+        private System.Windows.Forms.TextBox textBoxActiveMode;
     }
 }
 

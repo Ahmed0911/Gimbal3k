@@ -10,6 +10,7 @@ namespace Gimbal3kWInClient
    public unsafe struct SGimbal3kData
     {
         public UInt32 LoopCounter;
+        public UInt32 ActiveMode;
         public UInt16 PositionPanEncoCNT;
         public UInt16 PositionTiltEncoCNT;
         

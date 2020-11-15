@@ -13,6 +13,7 @@
 struct SGimbal3kData
 {
     uint32_t LoopCounter;
+    uint32_t ActiveMode;
     uint16_t PositionPanEncoCNT;
     uint16_t PositionTiltEncoCNT;
 

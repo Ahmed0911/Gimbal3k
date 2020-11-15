@@ -80,6 +80,9 @@ uint32_t CmdMode = 0;
 float RefManualPan = 0; // [-1...1]
 float RefManualTilt = 0; // [-1...1]
 
+float RefAutoPanDeg = 0; // [-180...+180]
+float RefAutoTiltDeg = 0; // [-90...+90]
+
 // Safety
 int32_t ManualCounter = 0; // shutdown system when reaches zero
 
@@ -89,6 +92,8 @@ int32_t ManualCounter = 0; // shutdown system when reaches zero
 
 #define PANLEVELDEG 257.4913f
 #define TILTLEVELDEG 34.1915f
+
+float GAIN_K = 0.2f; // 0.3+ begins to overshot
 
 void main(void)
 {
@@ -190,11 +195,38 @@ void main(void)
 		    if( ManualCounter > 0) // safety shutdown for manual control
 		    {
 		        ManualCounter--;
-		        outputPWMPan = PANPWMCENTER + (RefManualPan*150);
-                outputPWMTilt = TILTPWMCENTER + (RefManualTilt*150);
+
+		        // limit check
+		        if( (PositionPanDeg < 175  && RefManualPan > 0) || (PositionPanDeg > -175  && RefManualPan < 0) )
+		        {
+		            outputPWMPan = PANPWMCENTER + (RefManualPan*150);
+		        }
+
+		        if( (PositionTiltDeg < 85  && RefManualTilt > 0) || (PositionTiltDeg > -85  && RefManualTilt < 0) )
+		        {
+		            outputPWMTilt = TILTPWMCENTER + (RefManualTilt*150);
+		        }
 		    }
 		    else CmdMode = 0x00;
   		}
+
+		if( CmdMode == 0x02 )
+		{
+		    // AUTO MODE
+		    float deltaPan = RefAutoPanDeg - PositionPanDeg;
+		    float deltaTilt = RefAutoTiltDeg - PositionTiltDeg;
+
+		    float outputPan = GAIN_K * deltaPan;
+		    if( outputPan > 1) outputPan = 1;
+		    if( outputPan < -1) outputPan = -1;
+
+		    float outputTilt = GAIN_K * deltaTilt;
+            if( outputTilt > 1) outputTilt = 1;
+		    if( outputTilt < -1) outputTilt = -1;
+
+		    outputPWMPan = PANPWMCENTER + (outputPan*150);
+            outputPWMTilt = TILTPWMCENTER + (outputTilt*150);
+		}
 
 		/////////////////////////////////
 		// OUTPUTS
@@ -225,6 +257,7 @@ void SendPeriodicDataEth()
 {
     SGimbal3kData data{};
     data.LoopCounter = MainLoopCounter;
+    data.ActiveMode = CmdMode;
 
     // acc
     data.AccX = Acc[0];
@@ -268,6 +301,19 @@ void ProcessCommand(int cmd, unsigned char* data, int dataSize)
                     RefManualTilt = cmdRef.RefTilt;
 
                     ManualCounter = 100; // 1 second for shutdown
+                }
+
+                if( cmdRef.Command == 0x02)
+                {
+                    CmdMode = 0x02;
+                    RefAutoPanDeg = cmdRef.RefPan;
+                    RefAutoTiltDeg = cmdRef.RefTilt;
+
+                    // LIMIT REFs
+                    if( RefAutoPanDeg > 175) RefAutoPanDeg = 175;
+                    if( RefAutoPanDeg < -175) RefAutoPanDeg = -175;
+                    if( RefAutoTiltDeg > 85) RefAutoTiltDeg = 85;
+                    if( RefAutoTiltDeg < -85) RefAutoTiltDeg = -85;
                 }
             }
             break;

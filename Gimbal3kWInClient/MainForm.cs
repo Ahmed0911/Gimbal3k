@@ -78,8 +78,22 @@ namespace Gimbal3kWInClient
             textBoxMainLoopCounter.Text = localGimbalDataCopy.LoopCounter.ToString();
             textBoxPositionPanEnco.Text = localGimbalDataCopy.PositionPanEncoCNT.ToString();
             textBoxPositionTiltEnco.Text = localGimbalDataCopy.PositionTiltEncoCNT.ToString();
-            textBoxPositionPanDeg.Text = localGimbalDataCopy.PositionPanDeg.ToString() + "°";
-            textBoxPositionTiltDeg.Text = localGimbalDataCopy.PositionTiltDeg.ToString() + "°";
+            textBoxPositionPanDeg.Text = localGimbalDataCopy.PositionPanDeg.ToString("0.00") + "°";
+            textBoxPositionTiltDeg.Text = localGimbalDataCopy.PositionTiltDeg.ToString("0.00") + "°";
+
+            if(localGimbalDataCopy.ActiveMode == 0x00)
+            {
+                textBoxActiveMode.Text = "DISABLED";
+            }
+            else if(localGimbalDataCopy.ActiveMode == 0x01)
+            {
+                textBoxActiveMode.Text = "MANUAL";
+            }
+            else if (localGimbalDataCopy.ActiveMode == 0x02)
+            {
+                textBoxActiveMode.Text = "AUTO";
+            }
+            else textBoxActiveMode.Text = "ERROR";
 
             // Debug Buttons
             Text = ButtonLeft.ToString() + ",";
@@ -88,16 +102,43 @@ namespace Gimbal3kWInClient
             Text += ButtonDown.ToString();
 
             // Send Button Commands
-            SGimbal3kCommand cmd = new SGimbal3kCommand();
-            cmd.Command = 0x1; // manual cmd
-            float speed = 0.3f;
-            if (ButtonLeft) cmd.RefPan = -speed;
-            if (ButtonRight) cmd.RefPan = speed;
-            if (ButtonUp) cmd.RefTilt = speed;
-            if (ButtonDown) cmd.RefTilt = -speed;
+            if (radioButtonManualMode.Checked)
+            {
+                SGimbal3kCommand cmd = new SGimbal3kCommand();
+                cmd.Command = 0x1; // manual cmd
+                float speed = 0.4f;
+                if (ButtonLeft) cmd.RefPan = -speed;
+                if (ButtonRight) cmd.RefPan = speed;
+                if (ButtonUp) cmd.RefTilt = speed;
+                if (ButtonDown) cmd.RefTilt = -speed;
 
-            byte[] cmdArray = Comm.GetBytes(cmd);
-            SendData(0x30, cmdArray);
+                byte[] cmdArray = Comm.GetBytes(cmd);
+                SendData(0x30, cmdArray);
+            }
+        }
+
+        private void buttonGO_Click(object sender, EventArgs e)
+        {
+            if (radioButtonAutoMode.Checked)
+            {
+                float panRefDeg;
+                float tiltRefDeg;
+
+                if (float.TryParse(textBoxPanRef.Text, out panRefDeg))
+                {
+                    if (float.TryParse(textBoxTiltRef.Text, out tiltRefDeg))
+                    {
+                        // send new ref
+                        SGimbal3kCommand cmd = new SGimbal3kCommand();
+                        cmd.Command = 0x02; // auto cmd
+                        cmd.RefPan = panRefDeg;
+                        cmd.RefTilt = tiltRefDeg;
+
+                        byte[] cmdArray = Comm.GetBytes(cmd);
+                        SendData(0x30, cmdArray);
+                    }
+                }
+            }
         }
 
         ///////////////////////////////
