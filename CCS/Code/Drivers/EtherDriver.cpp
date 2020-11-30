@@ -7,7 +7,7 @@
 #include "inc/hw_types.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_emac.h"
-#include "driverlib/gpio.h"
+#include <driverlib/gpio.h>
 #include <driverlib/pin_map.h>
 #include <driverlib/sysctl.h>
 #include <driverlib/emac.h>
@@ -17,9 +17,12 @@
 #include "utils/lwiplib.h"
 #include <lwip/sockets.h>
 #include <lwip/inet.h>
+#include "swupdate.h"
 
+bool g_swUpdateRequest = false;
 extern uint32_t g_ui32SysClock;
 extern void ProcessCommand(int cmd, unsigned char* data, int dataSize);
+uint8_t g_pui8MACAddr[6]; // MAC Address
 
 void EtherUDPRecv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_addr *addr, u16_t port)
 {
@@ -28,6 +31,11 @@ void EtherUDPRecv(void *arg, struct udp_pcb *pcb, struct pbuf *p, struct ip_addr
 		((EtherDriver*)arg)->DataReceived(p, addr, port);
 		pbuf_free(p); // free received buffer
 	}
+}
+
+void SoftwareUpdateRequestedCallback(void)
+{
+    g_swUpdateRequest= true; // go update
 }
 
 // PINs:
@@ -44,19 +52,18 @@ void EtherDriver::Init()
 	// Set INT Priority
 	IntPrioritySet(INT_EMAC0, (1 << 5)); // high priority?
 
-	// Get MAC Address, from flash!
-	unsigned char pucMACAddress[6];
-	pucMACAddress[0] = 0x10;
-	pucMACAddress[1] = 0x20;
-	pucMACAddress[2] = 0x30;
-	pucMACAddress[3] = 0x00;
-	pucMACAddress[4] = 0x00;
-	pucMACAddress[5] = 0x65;
+    // Set MAC Address (also used for swupdate (can't read from flash->never stored)
+    g_pui8MACAddr[0] = 0x10;
+    g_pui8MACAddr[1] = 0x20;
+    g_pui8MACAddr[2] = 0x30;
+    g_pui8MACAddr[3] = 0x00;
+    g_pui8MACAddr[4] = 0x00;
+    g_pui8MACAddr[5] = 0x05;
 
 
 	// lwIP Ethernet
-	lwIPInit(g_ui32SysClock, pucMACAddress, inet_addr("101.0.168.192"), inet_addr("0.255.255.255"), inet_addr("1.0.168.192"), IPADDR_USE_STATIC); 	// Set IP
-	//lwIPInit(g_ui32SysClock, pucMACAddress, 0, 0, 0, IPADDR_USE_DHCP); 	// Set IP
+	lwIPInit(g_ui32SysClock, g_pui8MACAddr, inet_addr("101.0.168.192"), inet_addr("0.255.255.255"), inet_addr("1.0.168.192"), IPADDR_USE_STATIC); 	// Set IP
+	//lwIPInit(g_ui32SysClock, g_pui8MACAddr, 0, 0, 0, IPADDR_USE_DHCP); 	// Set IP
 
 	// Fix LEDs
 	HWREG(EMAC0_BASE + EMAC_O_CC) |= EMAC_CC_POL; // Set Ethernet LED polarity to be active low
@@ -65,13 +72,16 @@ void EtherDriver::Init()
 
 	// Setup the device locator service. (can be found by "finder.exe")
 	LocatorInit();
-	LocatorMACAddrSet(pucMACAddress);
-	LocatorAppTitleSet("Gimbal3k Board");
+	LocatorMACAddrSet(g_pui8MACAddr);
+	LocatorAppTitleSet("Gimbal3k Board v2");
 
 	// init lwIP
 	m_udpPcb =  udp_new();
 	udp_bind(m_udpPcb, IP_ADDR_ANY, ETHPORT);
 	udp_recv(m_udpPcb, EtherUDPRecv, this );
+
+	// setup ethernet update
+	SoftwareUpdateInit(SoftwareUpdateRequestedCallback);
 
 	DestinationPort = 0;
 

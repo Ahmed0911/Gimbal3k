@@ -24,11 +24,13 @@
 #include "Drivers/UBloxGPS.h"
 #include "Drivers/EtherDriver.h"
 #include "Drivers/AS5147UEncoder.h"
+#include "Drivers/swupdate.h"
 
 #include "CommData.h"
 #include "LLConverter.h"
 
 uint32_t g_ui32SysClock;
+extern bool g_swUpdateRequest;
 
 // Drivers
 DBGLed dbgLed;
@@ -137,6 +139,12 @@ void main(void)
 	{
 		timerLoop.Start(); // start timer
 		MainLoopCounter++;
+
+		// Check SW Update Request
+		if( g_swUpdateRequest)
+		{
+		    SoftwareUpdateBegin(g_ui32SysClock);
+		}
 
 		/////////////////////////////////
 		// INPUTS
