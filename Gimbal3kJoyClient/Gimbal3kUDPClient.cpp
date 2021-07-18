@@ -8,9 +8,9 @@
 
 int main()
 {
-    std::cout << "Gimbal 3k Joystick Client V1.0!\n";
+    std::cout << "Gimbal 3k Joystick Client V1.1!\n";
 
-    JoyController joy("192.168.0.101");
+    JoyController joy("192.168.5.231");
 
     while (1)
     {
