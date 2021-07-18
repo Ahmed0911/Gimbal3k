@@ -141,7 +141,7 @@ void JoyController::processJoystickCommands(XINPUT_GAMEPAD joyState)
 		// Auto Mode
 		m_PacketToSend.Command = 0x02; // Auto Mode
 
-		float divider = 2;
+		float divider = 5;
 
 		// Pan Mode
 		if (std::abs(joyState.sThumbLX) > DEADZONEANVAL) // deadzone
@@ -168,13 +168,13 @@ void JoyController::processJoystickCommands(XINPUT_GAMEPAD joyState)
 			if (joyState.sThumbLY > 0)
 			{
 				float inputVal = (float)(joyState.sThumbLY - DEADZONEANVAL) / (32768.0f - DEADZONEANVAL);
-				if (m_refTilt < 85) m_refTilt += (inputVal / divider);
+				if (m_refTilt > -85) m_refTilt -= (inputVal / divider);
 				//std::cout << "Tilt: " << m_refTilt << std::endl;
 			}
 			else
 			{
 				float inputVal = (float)(joyState.sThumbLY + DEADZONEANVAL) / (32768.0f - DEADZONEANVAL);
-				if (m_refTilt > -85) m_refTilt += (inputVal / divider);
+				if (m_refTilt < 85) m_refTilt -= (inputVal / divider);
 				//std::cout << "Tilt: " << m_refTilt << std::endl;
 			}
 		}
